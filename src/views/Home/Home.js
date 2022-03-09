@@ -59,6 +59,7 @@ const Home = () => {
   const tombAvaxLpStats = useLpStats('BERRY-AVAX-LP');
   const tShareAvaxLpStats = useLpStats('BSHARE-AVAX-LP');
   const tombStats = useTombStats();
+  console.log('tombstats', tombStats);
   const tShareStats = usetShareStats();
   const tBondStats = useBondStats();
   const tombFinance = useTombFinance();
@@ -168,7 +169,7 @@ const Home = () => {
               <p>To maximize profits, stake your harvested BSHAREs in the <StyledLink href="/smoothies" style={{ color: '#05147c' }} >Smoothies</StyledLink> to earn more BERRY!</p>
               
               { isMStart && !isMOver ? 
-                <a href="/garden" style={{fontSize:"24px", fontWeight:"600"}}>BSHARE Reward Pools are live now!</a> : !isMStart ?
+                <a href="/garden" style={{fontSize:"18px", fontWeight:"600", color:"#05147c" }}>BSHARE Reward Pools are live now!</a> : !isMStart ?
                 <div style={{display:'flex'}}>
                   BSHARE Reward Pools Launch In: <ProgressCountdown base={moment().toDate()} hideBar={true} deadline={mfrom} description="Pool Start" />
                 </div> : null 

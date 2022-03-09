@@ -50,8 +50,9 @@ export class TombFinance {
     this.TOMB = new ERC20(deployments.tomb.address, provider, 'BERRY');
     this.TSHARE = new ERC20(deployments.tShare.address, provider, 'BSHARE');
     this.TBOND = new ERC20(deployments.tBond.address, provider, 'BBOND');
-    this.TOMBWAVX = new ERC20('0x65eD597D5b527F17ae9fD95c963C7718a5380684', provider, 'BERRY-A-LP');
-    this.TSHAREWAVX = new ERC20('0x541C036549A643014712A5154067cB0dd2508C95', provider, 'BSHARE-A-LP');
+    this.TOMBWAVX = new ERC20('0xFae3957daAE1dA061489FB0e4DD403324593C1dA', provider, 'BERRY-A-LP');
+    console.log('tombavax', this.TBOND)
+    this.TSHAREWAVX = new ERC20('0x01eE7717bC86F0415232F9BCb199970e6Ce49688', provider, 'BSHARE-A-LP');
     this.AVAX = this.externalTokens['WAVAX'];
 
     // Uniswap V2 Pair
@@ -100,8 +101,7 @@ export class TombFinance {
     const { TombAvaxRewardPool } = this.contracts;
     const supply = await this.TOMB.totalSupply();
     const tombRewardPoolSupply = await this.TOMB.balanceOf(TombAvaxRewardPool.address);
-    const tombCirculatingSupply = supply
-      .sub(tombRewardPoolSupply)
+    const tombCirculatingSupply = supply.sub(tombRewardPoolSupply)
     const priceInAVAX = await this.getTokenPriceFromPancakeswap(this.TOMB);
     const priceOfOneAVAX = await this.getWAVAXPriceFromPancakeswap();
     const priceOfTombInDollars = (Number(priceInAVAX) * Number(priceOfOneAVAX)).toFixed(2);
@@ -208,7 +208,7 @@ export class TombFinance {
     };
   }
 
-  async getGravePriceInLastTWAP(): Promise<BigNumber> {
+  async getBerryPriceInLastTWAP(): Promise<BigNumber> {
     const { Treasury } = this.contracts;
     return Treasury.getBerryUpdatedPrice();
   }
@@ -278,11 +278,13 @@ export class TombFinance {
       const startDateTime = new Date(poolStartTime.toNumber() * 1000);
       const FOUR_DAYS = 4 * 24 * 60 * 60 * 1000;
       if (Date.now() - startDateTime.getTime() > FOUR_DAYS) {
-        return await poolContract.epochGravePerSecond(1);
+        return await poolContract.epochBerryPerSecond(1);
       }
-      return await poolContract.epochGravePerSecond(0);
+      return await poolContract.epochBerryPerSecond(0);
     }
     const rewardPerSecond = await poolContract.bSharePerSecond();
+    console.log('poolContract', poolContract.bSharePerSecond());
+
 
     if (depositTokenName.startsWith('BERRY-AVAX')) {
       return rewardPerSecond.mul(30000).div(59500);
@@ -344,7 +346,7 @@ export class TombFinance {
    */
   async buyBonds(amount: string | number): Promise<TransactionResponse> {
     const { Treasury } = this.contracts;
-    const treasuryTombPrice = await Treasury.getGravePrice();
+    const treasuryTombPrice = await Treasury.getBerrtPrice();
     return await Treasury.buyBonds(decimalToBalance(amount), treasuryTombPrice);
   }
 
@@ -354,7 +356,7 @@ export class TombFinance {
    */
   async redeemBonds(amount: string): Promise<TransactionResponse> {
     const { Treasury } = this.contracts;
-    const priceForTomb = await Treasury.getGravePrice();
+    const priceForTomb = await Treasury.getBerryPrice();
     return await Treasury.redeemBonds(decimalToBalance(amount), priceForTomb);
   }
 
@@ -936,7 +938,7 @@ export class TombFinance {
     const { TShareSwapper } = this.contracts;
     const tshareBalanceBN = await TShareSwapper.getTShareBalance();
     const tbondBalanceBN = await TShareSwapper.getTBondBalance(address);
-    // const tombPriceBN = await TShareSwapper.getGravePrice();
+    // const tombPriceBN = await TShareSwapper.getBerryPrice();
     // const tsharePriceBN = await TShareSwapper.getTSharePrice();
     const rateTSharePerTombBN = await TShareSwapper.getTShareAmountPerTomb();
     const tshareBalance = getDisplayBalance(tshareBalanceBN, 18, 5);

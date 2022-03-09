@@ -1,6 +1,6 @@
 import React from 'react';
 
-//Graveyard ecosystem logos
+//strawberry dao ecosystem logos
 import tombLogo from '../../assets/img/BERRY.png';
 import tShareLogo from '../../assets/img/BSHARE.png';
 // import tombLogoPNG from '../../assets/img/BERRY.png';

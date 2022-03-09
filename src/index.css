@@ -136,8 +136,8 @@ code {
 }
 
 .wallet-button:hover {
-    background-color: black !important;
-    color: #757ce8 !important;
+    background-color: #f3a9a9 !important;
+    color: #080808 !important;
 }
 
 @media (max-width: 600px) {
